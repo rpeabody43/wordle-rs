@@ -1,1 +1,5 @@
 /target
+
+# Everything IntelliJ
+/.idea
+*.iml
