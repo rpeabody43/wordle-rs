@@ -2,10 +2,10 @@ use std::fs;
 use std::io::stdin;
 use rand::Rng;
 
-mod rgx;
+mod match_w;
 
 pub fn run () -> Result<(), ()> {
-    rgx::test();
+    match_w::test("FIGHT", "XXXXO");
     Ok(())
     /*
     let words= file_to_vec("src/words.txt");
