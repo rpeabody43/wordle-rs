@@ -2,11 +2,19 @@ use std::fs;
 use std::io::stdin;
 use rand::Rng;
 
-mod match_w;
+mod game;
+mod matcher;
 
 pub fn run () -> Result<(), ()> {
-    match_w::test("FIGHT", "XXXXO");
+    let tests: Vec<(&str, &str)> = vec![("XXXXX", "KNIFE"),
+                                        ("XOXXX", "ROBOT"),
+                                        ("XOX-X", "POACH"),
+                                        ("OOOXX", "COUCH"),
+                                        ("OOOOO", "COULD")];
+    // let tests: Vec<(&str, &str)> = vec![("XOX-X", "POACH")];
+    game::test(&tests);
     Ok(())
+    // TODO figure this out and implement properly
     /*
     let words= file_to_vec("src/words.txt");
 

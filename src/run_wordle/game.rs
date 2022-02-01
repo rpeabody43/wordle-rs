@@ -40,7 +40,7 @@ impl Game {
     pub fn update (&mut self, code: &str, word: &str) {
         let codes: Vec<char> = code.chars().collect();
         let chars: Vec<char> = word.chars().collect();
-        let mut rgx_update: [String; 5] = ["[^g]".to_string(), "[^g]".to_string(), "[^g]".to_string(), "[^g]".to_string(), "[^g]".to_string()];
+        let mut rgx_update: [String; 5] = self.known_positions.clone();
         let mut hash_update = construct_letters();
 
         for i in 0..code.len() {
@@ -48,6 +48,8 @@ impl Game {
             if codes[i] == 'X' {
                 let amt = self.letters.get(&chars[i]).unwrap().0;
                 self.letters.insert(chars[i], (amt, true));
+
+
             } else {
                 // If the code is O, set the point in rgx to be that letter
                 if codes[i] == 'O' {
@@ -57,10 +59,8 @@ impl Game {
                     // i.e. if rgx_update[i] == [^gACF] add becomes gACF
                     // g is a placeholder character
                     let mut add: String = rgx_update[i][1..rgx_update[i].len() - 1].to_string();
-                    add.push(chars[i]);
-                    if add.chars().position(|c| c == chars[i]) == None {
-                        rgx_update[i] = format!("[{}]", &add);
-                    }
+                    println!("{}", &add);
+                    rgx_update[i] = format!("[{}{}]", &add, chars[i]);
                 }
                 // If the cap is set to false
                 if !self.letters.get(&chars[i]).unwrap().1 {
@@ -93,19 +93,24 @@ fn print_hm (map: &HashMap<char, (usize, bool)>) {
 
 fn print_arr (arr: &[String]) {
     print!("[");
-    for str in arr {
+    for i in 0..arr.len() {
+        let str = &arr[i];
         print!("{}", str);
-        if !arr[arr.len() - 1].eq(str) {
+        if i != arr.len() - 1 {
             print!(", ");
         }
     }
     println!("]");
 }
 
-pub fn test (str: &str, code: &str) {
+pub fn test (tests: &Vec<(&str, &str)>) {
     // TODO multiple test
     let mut game = Game::new();
-    game.update(code, str);
-    print_arr(&game.known_positions);
-    print_hm(&game.letters);
+    for test in tests {
+        game.update(test.0, test.1);
+        println!("{}: {}", test.1, test.0);
+        print_arr(&game.known_positions);
+        print_hm(&game.letters);
+        println!();
+    }
 }
