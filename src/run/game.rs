@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use std::hash::Hash;
-use regex::Regex;
 
 pub struct Game {
     letters: HashMap<char, (usize, bool)>,
