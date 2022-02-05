@@ -5,7 +5,7 @@ A program to solve any [Wordle](https://www.powerlanguage.co.uk/wordle/) puzzle,
 The basic loop goes like this:
 1. Program comes up with a word
 2. You pass along the 'code' that Wordle gives you
-   1. That wordle code syntax goes like this (case in-sensitive):
+   1. Wordle syntax goes like this (case in-sensitive):
    
         🟩: O
 
