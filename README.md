@@ -7,11 +7,11 @@ The basic loop goes like this:
 2. You pass along the 'code' that Wordle gives you
    1. Wordle syntax goes like this (case in-sensitive):
    
-        🟩: O
+        🟩 (Green) : O
 
-        🟨: -
+        🟨 (Yellow): -
 
-        ⬛: X
+        ⬛ (Gray)  : X
 
         i.e. a wordle response of 🟩⬛⬛🟨⬛ becomes OXX-O
 3. Repeat
