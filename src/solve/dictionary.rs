@@ -11,7 +11,7 @@ fn file_to_vec (f: &str) -> Vec<String> {
     let file = fs::read_to_string(f);
     match file {
         Ok(f) => {
-            return f.split("\r\n").
+            return f.split("\n").
                 map(|s| s.to_string().to_uppercase()).
                 collect();
         }
