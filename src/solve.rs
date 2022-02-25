@@ -16,7 +16,7 @@ pub fn run () -> Result<(), ()> {
     let dict_path = "resources/words.txt";
 
     let dict = dictionary::Dictionary::new(dict_path);
-    let mut word = dict.get_random_word();
+    let mut word = dict.get_word(dict.index_of("CRANE").unwrap());
     let mut code = String::new();
     let mut game = game::Game::new();
 
@@ -39,8 +39,7 @@ pub fn run () -> Result<(), ()> {
             code = code.to_uppercase().trim().to_string();
             if wordle::is_valid_code(&code) {
                 code_valid = true;
-            }
-            else {
+            } else {
                 println!("invalid code: {}", code);
             }
         }
@@ -52,7 +51,7 @@ pub fn run () -> Result<(), ()> {
         }
     }
     println!("LETS GOOOO");
-    println!("Press any key to exit...");
+    println!("Press enter to exit...");
     let mut exit = String::new();
     match stdin().read_line(&mut exit) {
         Ok(_) => {}

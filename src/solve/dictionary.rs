@@ -11,7 +11,7 @@ fn file_to_vec (f: &str) -> Vec<String> {
     let file = fs::read_to_string(f);
     match file {
         Ok(f) => {
-            return f.split("\n").
+            return f.split("\r\n").
                 map(|s| s.to_string().to_uppercase()).
                 collect();
         }
@@ -39,5 +39,33 @@ impl Dictionary {
     pub fn rmv_word (&mut self, word: &str) {
         let idx = self.words.iter().position(|w| w.eq(word)).unwrap();
         self.words.remove(idx);
+    }
+
+
+    pub fn index_of (&self, str: &str) -> Option<usize> {
+        let mut begin: usize = 0;
+        let mut end: usize = self.words.len() - 1;
+        let mut pointer: usize = self.words.len() / 2;
+
+        while !self.words[pointer].eq(str) && begin <= end {
+            pointer = (begin + end) / 2;
+
+            // < in this context means lower in the alphabet
+            if self.words[pointer] < str.to_string() {
+                begin = pointer + 1;
+            }
+            else {
+                end = pointer - 1;
+            }
+        }
+
+        match self.words[pointer].eq(str) {
+            true => {
+                Some(pointer)
+            }
+            false => {
+                None
+            }
+        }
     }
 }
