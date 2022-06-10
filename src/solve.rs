@@ -36,12 +36,6 @@ pub fn run () -> Result<(), ()> {
         false => "SURVIVLE:"
     });
 
-    // Use only the correct words if in wordle mode.
-    // otherwise use every valid word
-    // let dict_path = match mode {
-    //     true => "resources/hiddenwords.txt",
-    //     false => "resources/words.txt"
-    // };
     let dict_path = "resources/hiddenwords.txt";
 
     let dict: dictionary::Dictionary = dictionary::Dictionary::new(dict_path);
