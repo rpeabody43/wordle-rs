@@ -1,3 +1,5 @@
+#### I stopped working on this because implementing the version with information theory was very hard
+
 ## Wordle-RS
 A program to solve any [Wordle](https://www.powerlanguage.co.uk/wordle/) puzzle, written in Rust.
 
