@@ -1,33 +1,64 @@
 use std::io::stdin;
 
-mod game;
 mod dictionary;
 mod wordle;
 mod word_finder;
 
+// 1 : Wordle (Least guesses possible)
+// 2 : Survivle (Most guesses possible)
+fn set_mode () -> bool {
+    println!("1 for Wordle, 2 for Survivle: ");
+    let mut mode_str = String::new();
+    let valid = false;
+    while !valid {
+        match stdin().read_line(&mut mode_str) {
+            Ok(_) => { }
+            Err(_) => {
+                println!("something went wrong");
+                break;
+            }
+        }
+        mode_str = mode_str.trim().to_string();
+        if !(mode_str.eq("1") || mode_str.eq("2")) {
+            println!("INVALID");
+        }
+        else { return mode_str.eq("1"); }
+    }
+    false
+}
+
 pub fn run () -> Result<(), ()> {
-    // let tests: Vec<(String, String)> = vec![("XXXXX".to_string(), "AAHED".to_string()),
-    //                                         ("XOXX-".to_string(), "BIBBS".to_string()),
-    //                                         // ("-XO-O".to_string(), "ADEPT".to_string()),
-    //                                         // ("OOOOO".to_string(), "PLEAT".to_string()),
-    // ];
-    // game::test(&tests);
 
-    let dict_path = "resources/words.txt";
+    let mode = set_mode();
+    println!("{}",
+    match mode {
+        true => "WORDLE:",
+        false => "SURVIVLE:"
+    });
 
-    let dict = dictionary::Dictionary::new(dict_path);
-    let mut word = dict.get_word(dict.index_of("CRANE").unwrap());
-    let mut code = String::new();
-    let mut game = game::Game::new();
+    // Use only the correct words if in wordle mode.
+    // otherwise use every valid word
+    // let dict_path = match mode {
+    //     true => "resources/hiddenwords.txt",
+    //     false => "resources/words.txt"
+    // };
+    let dict_path = "resources/hiddenwords.txt";
+
+    let dict: dictionary::Dictionary = dictionary::Dictionary::new(dict_path);
+    let mut code_str = String::new();
+    let mut finder = word_finder::Finder::new(dict.words.len() as u32);
+    let mut word = dict.get_word(finder.get_word(&dict, mode));
+    // let mut word = dict.get_word(dict.index_of("CRANE").unwrap());
 
     let mut gameover = false;
 
+    let mut rounds = 1;
     while !gameover {
-        println!("{}", word);
+        println!("{}", dictionary::string_from_char_arr(word));
         let mut code_valid = false;
         while !code_valid{
-            code = String::new();
-            match stdin().read_line(&mut code) {
+            code_str = String::new();
+            match stdin().read_line(&mut code_str) {
                 Ok(_) => {}
                 Err(_) => {
                     println!("something went wrong");
@@ -36,21 +67,38 @@ pub fn run () -> Result<(), ()> {
             }
 
             // Cast to uppercase, then take everything but the \n at the end
-            code = code.to_uppercase().trim().to_string();
-            if wordle::is_valid_code(&code) {
+            code_str = code_str.to_uppercase().trim().to_string();
+            if wordle::is_valid_code(&code_str) {
                 code_valid = true;
             } else {
-                println!("invalid code: {}", code);
+                println!("invalid code: {}", code_str);
             }
         }
-        if code.eq("OOOOO") { gameover = true; }
+        if code_str.eq("OOOOO") { gameover = true; }
         else {
-            println!("{}: {}", word, code);
-            game.update(&code, &word);
-            word = word_finder::get_word(&game, &dict);
+            let mut code: u16 = 0;
+            for i in 0..code_str.len() {
+                let c = code_str.chars().nth(i).unwrap();
+                code += match c {
+                    'O' => 0,
+                    '-' => 1,
+                    'X' => 2,
+                    _ => {
+                        panic!("this can't happen lol");
+                    }
+                } * 10_u32.pow(i as u32) as u16;
+            }
+            println!("{}: {}", dictionary::string_from_char_arr(word), code_str);
+            finder.rmv_words(word, code, &dict);
+            println!("{} solutions", finder.remaining_words.len());
+            word = dict.get_word(finder.get_word(&dict, mode));
+            rounds += 1;
         }
     }
-    println!("LETS GOOOO");
+    if mode {
+        println!("LETS GOOOO");
+    }
+    else {println!("We survived {} rounds", rounds)}
     println!("Press enter to exit...");
     let mut exit = String::new();
     match stdin().read_line(&mut exit) {

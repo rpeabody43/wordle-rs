@@ -1,18 +1,43 @@
 use std::fs;
-use rand::thread_rng;
-use rand::Rng;
+
+pub fn string_from_char_arr (chars: &[char; 5]) -> String {
+    let mut ret = String::new();
+    for c in chars {
+        ret.push(*c);
+    }
+    ret
+}
 
 pub struct Dictionary {
-    words: Vec<String>
+    pub words: Vec<[char; 5]>,
+}
+
+// The < operator works with strings but for a char array I have to do this
+fn is_lower_alphabet (word1: &[char; 5], word2: &[char; 5]) -> bool {
+    for i in 0..5 as usize {
+        match word1[i] == word2[i] {
+            true => { continue; }
+            false => { return word1[i] < word2[i]; }
+        }
+    }
+    false
+}
+
+fn string_to_chars (word: &String) -> [char; 5]{
+    let mut ret: [char; 5] = [' '; 5];
+    let chars: Vec<char> = word.chars().collect();
+    for i in 0..chars.len() as usize { ret[i] = chars[i];
+    }
+    ret
 }
 
 /// Returns a vec, split from file path; panics if file does not exist
-fn file_to_vec (f: &str) -> Vec<String> {
+fn file_to_vec (f: &str) -> Vec<[char; 5]> {
     let file = fs::read_to_string(f);
     match file {
         Ok(f) => {
             return f.split("\r\n").
-                map(|s| s.to_string().to_uppercase()).
+                map(|s| string_to_chars(&s.to_uppercase())).
                 collect();
         }
         Err(..) => { panic!("FnF"); }
@@ -22,44 +47,33 @@ fn file_to_vec (f: &str) -> Vec<String> {
 impl Dictionary {
     pub fn new (f: &str) -> Self {
         Dictionary {
-            words: file_to_vec(f)
+            words: file_to_vec(f),
         }
     }
 
-    pub fn get_word (&self, idx: usize) -> &String {
+    pub fn get_word (&self, idx: usize) -> &[char; 5] {
         &self.words[idx]
     }
 
-    pub fn get_random_word (&self) -> &String {
-        let mut rng = thread_rng();
-        let num: usize = rng.gen_range(0..self.words.len());
-        &self.words[num]
-    }
-
-    pub fn rmv_word (&mut self, word: &str) {
-        let idx = self.words.iter().position(|w| w.eq(word)).unwrap();
-        self.words.remove(idx);
-    }
-
-
     pub fn index_of (&self, str: &str) -> Option<usize> {
+        let target: [char; 5] = string_to_chars(&String::from(str));
+
         let mut begin: usize = 0;
-        let mut end: usize = self.words.len() - 1;
+        let mut end: usize = self.words.len() + 1;
         let mut pointer: usize = self.words.len() / 2;
 
-        while !self.words[pointer].eq(str) && begin <= end {
-            pointer = (begin + end) / 2;
-
+        while !self.words[pointer].eq(&target) && begin <= end {
+            // println!("{}", pointer);
+            pointer = begin + (end - begin) / 2;
             // < in this context means lower in the alphabet
-            if self.words[pointer] < str.to_string() {
-                begin = pointer + 1;
-            }
-            else {
+            if is_lower_alphabet(&target, &self.words[pointer]) {
                 end = pointer - 1;
+            } else {
+                begin = pointer + 1;
             }
         }
 
-        match self.words[pointer].eq(str) {
+        match self.words[pointer].eq(&target) {
             true => {
                 Some(pointer)
             }

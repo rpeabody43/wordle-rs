@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-use regex::Regex;
+// Functions that are just 'rules of the game'
 
 pub fn is_valid_code(code: &str) -> bool {
     if code.chars().count() != 5 { return false; }
@@ -9,37 +8,58 @@ pub fn is_valid_code(code: &str) -> bool {
     true
 }
 
-fn arr_to_rgx (arr: &[String; 5]) -> Regex {
-    let mut ret: String = String::new();
-    for str in arr {
-        ret = format!("{}{}", ret, str);
+pub fn to_b10 (num: u16) -> u16 {
+    let mut i = num;
+    let mut ret: u16 = 0;
+    let mut pass: u8 = 0;
+    while i > 0 as u16 {
+        ret += (i % 10) * 3_u16.pow(pass as u32);
+        i /= 10;
+        pass += 1;
     }
-    Regex::new(&format!("^{}$", ret)).unwrap()
+    ret
+
 }
 
-fn match_hashmap (word: &String, letters: &HashMap<char, (usize, bool)>) -> bool {
-    let mut counts: HashMap<char, usize> = HashMap::new();
-    let chars: Vec<char> = word.chars().collect();
-    let alphabet: Vec<char> = "ABCEDEFGHIJKLMNOPQRSTUVWXYZ".chars().collect();
-    for c in &alphabet {
-        counts.insert(*c, 0);
-    }
-    for c in &chars {
-        counts.insert(*c, counts.get(c).unwrap() + 1);
-    }
-    // Allowed amounts are equal to if hard capped, or greater than if not
-    for c in &alphabet {
-        // If the amount of characters exceeds hard cap return false
-        if counts.get(c).unwrap() > &letters.get(c).unwrap().0 && letters.get(c).unwrap().1 { return false; }
-        // If the amount of characters is less than the required amounts
-        if counts.get(c).unwrap() < &letters.get(c).unwrap().0 { return false; }
-    }
-    true
-}
+pub fn gen_code (guess: &[char; 5], answer: &[char; 5]) -> u16 {
+    // 0 = O
+    // 1 = -
+    // 2 = X
 
-/// Returns true if the given word matches the regex condition formatted as an array, as well as a hashmap
-pub fn match_wordle (word: &String, letters: &HashMap<char, (usize, bool)>, exact_arr: &[String; 5]) -> bool {
-    let exact = arr_to_rgx(exact_arr);
+    let mut code: [u8; 5] = [0; 5]; // Will be converted to a String at the end
 
-    exact.is_match(word) && match_hashmap(word, letters)
+    // Count how many times a letter has appeared
+    let mut guess_char_count: [u8; 26] = [0; 26];
+    let mut answer_char_count: [u8; 26] = [0; 26];
+
+    for i in 0..5 as usize {
+        if guess[i] == answer[i] {
+            code[i] = 0;
+        }
+
+        guess_char_count[guess[i] as usize - 65] += 1;
+        answer_char_count[answer[i] as usize - 65] += 1;
+    }
+
+    for i in (0..5 as usize).rev() {
+        let idx = guess[i] as usize - 65;
+        if guess[i] != answer[i] {
+            if answer_char_count[idx] < guess_char_count[idx] {
+                guess_char_count[idx] -= 1;
+                code[i] = 2;
+            } else {
+                code[i] = 1;
+            }
+        }
+    }
+
+    // Convert from a slice to a base 3 number
+    let mut ret: u16 = 0;
+    for i in 0..5 {
+        let c = code[i];
+        let iter = (c as u16 * 10_u16.pow(i as u32)) as u16;
+        ret += iter;
+    }
+
+    ret
 }
