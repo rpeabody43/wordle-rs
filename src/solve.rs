@@ -48,6 +48,7 @@ pub fn run () -> Result<(), ()> {
 
     let mut rounds = 1;
     while !gameover {
+        println!();
         println!("{}", dictionary::string_from_char_arr(word));
         let mut code_valid = false;
         while !code_valid{
@@ -70,6 +71,7 @@ pub fn run () -> Result<(), ()> {
         }
         if code_str.eq("OOOOO") { gameover = true; }
         else {
+            // Handle code from user
             let mut code: u16 = 0;
             for i in 0..code_str.len() {
                 let c = code_str.chars().nth(i).unwrap();
@@ -83,16 +85,29 @@ pub fn run () -> Result<(), ()> {
                 } * 10_u32.pow(i as u32) as u16;
             }
             println!("{}: {}", dictionary::string_from_char_arr(word), code_str);
+
+            // Calculate Next Word
             finder.rmv_words(word, code, &dict);
-            println!("{} solutions", finder.remaining_words.len());
+            let solutions = finder.remaining_words.len();
+            println!("{} solutions", solutions);
+            if solutions == 0 {
+                println!("No possible solutions left");
+                return Ok(());
+            }
             word = dict.get_word(finder.get_word(&dict, mode));
             rounds += 1;
         }
     }
+
+    // At this point the game is won
     if mode {
         println!("LETS GOOOO");
     }
-    else {println!("We survived {} rounds", rounds)}
+    else {
+        print!("We survived {} rounds. ", rounds);
+        if rounds >= 7 { println!("LETS GOOOO"); }
+        else { println!("Better luck next time.") }
+    }
     println!("Press enter to exit...");
     let mut exit = String::new();
     match stdin().read_line(&mut exit) {
