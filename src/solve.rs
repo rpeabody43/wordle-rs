@@ -58,6 +58,7 @@ pub fn run () -> Result<(), ()> {
     // 4. Repeat
     while !gameover {
         // Print the next guess
+        println!();
         println!("{}", dictionary::string_from_char_arr(word));
 
         // Handle user input of the 'code'
@@ -110,10 +111,16 @@ pub fn run () -> Result<(), ()> {
             rounds += 1;
         }
     }
+
+    // At this point the game is won
     if mode {
         println!("LETS GOOOO");
     }
-    else {println!("We survived {} rounds", rounds)}
+    else {
+        print!("We survived {} rounds. ", rounds);
+        if rounds >= 7 { println!("LETS GOOOO"); }
+        else { println!("Better luck next time.") }
+    }
     println!("Press enter to exit...");
     let mut exit = String::new();
     match stdin().read_line(&mut exit) {
