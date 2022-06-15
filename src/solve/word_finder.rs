@@ -1,3 +1,5 @@
+// The instance of the game. The 'player'.
+
 use crate::solve::dictionary;
 use crate::solve::wordle;
 

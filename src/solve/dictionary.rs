@@ -1,3 +1,5 @@
+// Standard functions for the dictionary of words
+
 use std::fs;
 
 pub fn string_from_char_arr (chars: &[char; 5]) -> String {
@@ -23,6 +25,7 @@ fn is_lower_alphabet (word1: &[char; 5], word2: &[char; 5]) -> bool {
     false
 }
 
+// Char arrays are more efficient to index into
 fn string_to_chars (word: &String) -> [char; 5]{
     let mut ret: [char; 5] = [' '; 5];
     let chars: Vec<char> = word.chars().collect();
@@ -31,7 +34,7 @@ fn string_to_chars (word: &String) -> [char; 5]{
     ret
 }
 
-/// Returns a vec, split from file path; panics if file does not exist
+// Returns a vector, split from file path; panics if file does not exist
 fn file_to_vec (f: &str) -> Vec<[char; 5]> {
     let file = fs::read_to_string(f);
     match file {
@@ -65,7 +68,6 @@ impl Dictionary {
         while !self.words[pointer].eq(&target) && begin <= end {
             // println!("{}", pointer);
             pointer = begin + (end - begin) / 2;
-            // < in this context means lower in the alphabet
             if is_lower_alphabet(&target, &self.words[pointer]) {
                 end = pointer - 1;
             } else {

@@ -21,6 +21,7 @@ pub fn to_b10 (num: u16) -> u16 {
 
 }
 
+// Given two words, the answer and a guess, returns a code in the same way as wordle
 pub fn gen_code (guess: &[char; 5], answer: &[char; 5]) -> u16 {
     // 0 = O
     // 1 = -
