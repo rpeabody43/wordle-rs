@@ -26,3 +26,6 @@ The basic loop goes like this:
    i.e. a wordle response of 🟩⬛⬛🟨⬛ becomes OXX-O
    </pre>
 3. Repeat
+
+### Project Outline
+- The source code is located in ./src, with `main.rs` as the entrypoint
