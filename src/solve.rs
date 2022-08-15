@@ -84,7 +84,8 @@ pub fn run () -> Result<(), ()> {
         if code_str.eq("OOOOO") { gameover = true; } // 5 Greens
         else {
             // Convert from a human readable string to a base 3 number
-            // i.e. X-XOX becomes 21202
+            // The b3 number is reversed
+            // i.e. XX-OX becomes 20122
             let mut code: u16 = 0;
             for i in 0..code_str.len() {
                 let c = code_str.chars().nth(i).unwrap();
@@ -101,7 +102,7 @@ pub fn run () -> Result<(), ()> {
             }
 
             // Print out the word again, with the corresponding response code from wordle
-            println!("{}: {}", dictionary::string_from_char_arr(word), code_str);
+            println!("{}: {}", dictionary::string_from_char_arr(word), code);
             // Remove everything that doesn't match that code with the same word
             finder.rmv_words(word, code, &dict);
             // How many solutions are left?
