@@ -1,136 +1,72 @@
-use std::io::stdin;
-
-mod dictionary;
-mod wordle;
+pub(crate) mod dictionary;
 mod word_finder;
 
-// 1 : Wordle (Least guesses possible)
-// 2 : Survivle (Most guesses possible)
-fn set_mode () -> bool {
-    println!("1 for Wordle, 2 for Survivle: ");
-    let mut mode_str = String::new();
-    let valid = false;
-    while !valid {
-        match stdin().read_line(&mut mode_str) {
-            Ok(_) => { }
-            Err(_) => {
-                println!("something went wrong");
-                break;
-            }
-        }
-        mode_str = mode_str.trim().to_string();
-        if !(mode_str.eq("1") || mode_str.eq("2")) {
-            println!("INVALID");
-        }
-        else { return mode_str.eq("1"); }
-    }
-    false
+// OOP makes this harder than it has to be
+// but it's the only way I can think to separate frontend stuff and the solving algo
+pub struct Session {
+    mode: bool,
+    dict: dictionary::Dictionary,
+    finder: word_finder::Finder,
+    pub word_idx: usize,
+    pub gameover: bool,
+    rounds: i32,
 }
 
-pub fn run () -> Result<(), ()> {
+impl Session {
+    pub fn new (mode: bool, dict_path: &str) -> Self {
+        let dict = dictionary::Dictionary::new(dict_path);
+        let finder = word_finder::Finder::new(dict.words.len() as u32);
+        // The best starting word can be found by the program,
+        let word_idx = finder.get_word(&dict, mode);
+        //or it can be explicitly defined
+        // let word = dict.get_word(dict.index_of("CRANE").unwrap());
+        Self {
+            mode,
+            dict,
+            finder,
+            word_idx,
+            gameover: false,
+            rounds: 1,
+        }
+    }
 
-    let mode = set_mode();
-    println!("{}",
-    match mode {
-        true => "WORDLE:",
-        false => "SURVIVLE:"
-    });
-
-    let dict_path = "resources/hiddenwords.txt";
-
-    let dict: dictionary::Dictionary = dictionary::Dictionary::new(dict_path);
-    let mut code_str = String::new();
-    let mut finder = word_finder::Finder::new(dict.words.len() as u32);
-    
-    // The best starting word can be found by the program, 
-    let mut word = dict.get_word(finder.get_word(&dict, mode));
-    //or it can be explicitly defined
-    // let mut word = dict.get_word(dict.index_of("CRANE").unwrap());
-
-    let mut gameover = false;
-
-    let mut rounds = 1;
-    
-    // Basic program loop:
-    // 1. Guess the word with the lowest (or highest) standard deviation of possible answers per each code.
-    // 2. Take in the Wordle response from the user.
-    // 3. Evaluate and remove words from the dictionary that would not have returned the response if they were the answer.
-    // 4. Repeat
-    while !gameover {
-        // Print the next guess
-        println!();
-        println!("{}", dictionary::string_from_char_arr(word));
-
-        // Handle user input of the 'code'
-        let mut code_valid = false;
-        while !code_valid{
-            code_str = String::new();
-            match stdin().read_line(&mut code_str) {
-                Ok(_) => {}
-                Err(_) => {
-                    println!("something went wrong");
-                    break;
+    pub fn new_guess (&mut self, code_str: &String) {
+        let word = self.dict.get_word(self.word_idx);
+        if code_str.eq("OOOOO") { // 5 Greens
+            self.gameover = true;
+            return;
+        }
+        // Convert from a human readable string to a base 3 number
+        // The b3 number is reversed
+        // i.e. XX-OX becomes 20122
+        let mut code: u16 = 0;
+        for i in 0..code_str.len() {
+            let c = code_str.chars().nth(i).unwrap();
+            code += match c {
+                'O' => 0,
+                '-' => 1,
+                'X' => 2,
+                _ => {
+                    // Already checked for validity above, so this will never run
+                    // Borrow checker throws a compile error if there's no _ pattern
+                    panic!("this can't happen lol");
                 }
-            }
-
-            // Cast to uppercase, then take everything but the \n at the end
-            code_str = code_str.to_uppercase().trim().to_string();
-            if wordle::is_valid_code(&code_str) {
-                code_valid = true;
-            } else {
-                println!("invalid code: {}", code_str);
-            }
+            } * 10_u32.pow(i as u32) as u16;
         }
-        if code_str.eq("OOOOO") { gameover = true; } // 5 Greens
-        else {
-            // Convert from a human readable string to a base 3 number
-            // The b3 number is reversed
-            // i.e. XX-OX becomes 20122
-            let mut code: u16 = 0;
-            for i in 0..code_str.len() {
-                let c = code_str.chars().nth(i).unwrap();
-                code += match c {
-                    'O' => 0,
-                    '-' => 1,
-                    'X' => 2,
-                    _ => {
-                        // Already checked for validity above, so this will never run
-                        // Borrow checker throws a compile error if there's no _ pattern
-                        panic!("this can't happen lol");
-                    }
-                } * 10_u32.pow(i as u32) as u16;
-            }
 
-            // Print out the word again, with the corresponding response code from wordle
-            println!("{}: {}", dictionary::string_from_char_arr(word), code);
-            // Remove everything that doesn't match that code with the same word
-            finder.rmv_words(word, code, &dict);
-            // How many solutions are left?
-            println!("{} solutions", finder.remaining_words.len());
-            // New word
-            word = dict.get_word(finder.get_word(&dict, mode));
-            rounds += 1;
-        }
+        // Remove everything that doesn't match that code with the same word
+        self.finder.rmv_words(word, code, &self.dict);
+
+        self.rounds += 1;
+
+        self.word_idx = self.finder.get_word(&self.dict, self.mode);
     }
 
-    // At this point the game is won
-    if mode {
-        println!("LETS GOOOO");
-    }
-    else {
-        print!("We survived {} rounds. ", rounds);
-        if rounds >= 7 { println!("LETS GOOOO"); }
-        else { println!("Better luck next time.") }
-    }
-    println!("Press enter to exit...");
-    let mut exit = String::new();
-    match stdin().read_line(&mut exit) {
-        Ok(_) => {}
-        Err(_) => {
-            println!("how did you mess this up");
-        }
+    pub fn solutions (&self) -> usize {
+        self.finder.remaining_words.len()
     }
 
-    Ok(())
-
+    pub fn current_word (&self) -> String {
+        dictionary::string_from_char_arr(self.dict.get_word(self.word_idx))
+    }
 }

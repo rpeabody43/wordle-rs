@@ -1,7 +1,7 @@
 // The instance of the game. The 'player'.
 
 use crate::solve::dictionary;
-use crate::solve::wordle;
+use crate::wordle;
 
 fn init_remaining(length: u32) -> Vec<usize> {
     let mut ret: Vec<usize> = Vec::new();
