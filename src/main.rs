@@ -1,9 +1,14 @@
-use std::io::stdin;
+use std::{
+    io::stdin,
+};
+use yew::prelude::*;
+
 use wordle::is_valid_code;
 
 mod solve;
 pub(crate) mod wordle;
 
+// region console_app
 
 // 1 : Wordle (Least guesses possible)
 // 2 : Survivle (Most guesses possible)
@@ -52,17 +57,13 @@ fn get_valid_code () -> String {
     code_str
 }
 
-pub fn main () {
-    console_app();
-}
-
-pub fn console_app () {
+fn console_app () {
     let mode = set_mode();
     println!("{}",
-             match mode {
-                 true => "WORDLE:",
-                 false => "SURVIVLE:"
-             });
+            match mode {
+                true => "WORDLE:",
+                false => "SURVIVLE:"
+            });
 
     let dict_path = "resources/hiddenwords.txt";
 
@@ -75,4 +76,44 @@ pub fn console_app () {
         println!("{}: {}\n", session.current_word(), code_str);
         session.new_guess(&code_str);
     }
+}
+
+// endregion
+
+#[derive(Properties, PartialEq)]
+struct WordProps {
+    word: String,
+    active: bool,
+}
+
+#[function_component(Word)]
+fn word_comp (WordProps { word, active }: &WordProps) -> Html {
+    let letters = word.chars();
+
+    html! {
+    <div class="word"> {
+        // Loop through every letter and give it it's own div for styling
+        letters.map(|letter| html! {
+            <div class="letter"> { letter } </div>
+        }).collect::<Html>()
+    } </div>
+    }
+}
+
+#[function_component(App)]
+fn web_app () -> Html {
+    let test: String = "CRANE".to_string();
+    html! {
+        <>
+            <h1> { "wordle-rs" } </h1>
+            <ul>
+                <li><Word word={test} active=false /></li>
+            </ul>
+        </>
+    }
+}
+
+fn main () {
+    // console_app();
+    yew::Renderer::<App>::new().render();
 }
