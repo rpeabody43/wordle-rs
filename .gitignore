@@ -3,3 +3,5 @@
 # Everything IntelliJ
 /.idea
 *.iml
+
+dist
