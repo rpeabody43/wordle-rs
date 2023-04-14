@@ -57,6 +57,27 @@ fn get_valid_code () -> String {
     code_str
 }
 
+pub fn str_to_code (code_str: &String) -> u16 {
+    // Convert from a human readable string to a base 3 number
+    // The b3 number is reversed
+    // i.e. XX-OX becomes 20122
+    let mut code: u16 = 0;
+    for i in 0..code_str.len() {
+        let c = code_str.chars().nth(i).unwrap();
+        code += match c {
+            'O' => 0,
+            '-' => 1,
+            'X' => 2,
+            _ => {
+                // Already checked for validity above, so this will never run
+                // Borrow checker throws a compile error if there's no _ pattern
+                panic!("this can't happen lol");
+            }
+        } * 10_u32.pow(i as u32) as u16;
+    }
+    code
+}
+
 fn console_app () {
     let mode = set_mode();
     println!("{}",
@@ -74,41 +95,60 @@ fn console_app () {
         println!("{} ({} solutions)", session.current_word(), session.solutions());
         code_str = get_valid_code();
         println!("{}: {}\n", session.current_word(), code_str);
-        session.new_guess(&code_str);
+        let code: u16 = str_to_code(&code_str);
+        session.new_guess(code);
     }
 }
 
 // endregion
 
-#[derive(Properties, PartialEq)]
-struct WordProps {
+#[derive(Clone, PartialEq)]
+struct Word {
     word: String,
-    active: bool,
+    code: String,
 }
 
-#[function_component(Word)]
-fn word_comp (WordProps { word, active }: &WordProps) -> Html {
-    let letters = word.chars();
+#[derive(Properties, PartialEq)]
+struct WordListProps {
+    words: Vec<Word>
+}
 
+#[function_component(WordList)]
+fn word_comp (WordListProps { words }: &WordListProps) -> Html {
     html! {
-    <div class="word"> {
-        // Loop through every letter and give it it's own div for styling
-        letters.map(|letter| html! {
-            <div class="letter"> { letter } </div>
-        }).collect::<Html>()
-    } </div>
+        <ul> {
+            words.iter().map(|word: &Word| html! {
+                <li class="word"> {
+                    word.word.chars().enumerate().map(|(idx, l)| {
+                        let color_class = match word.code.chars().nth(idx).unwrap() {
+                            'O' => "green",
+                            '-' => "yellow",
+                            _ => ""
+                        };
+                        html! {
+                            <div class={classes!("letter", color_class)}> { l } </div>
+                        }
+                    }).collect::<Html>()
+                } </li>
+            }
+            ).collect::<Html>()
+        } </ul>
     }
 }
 
 #[function_component(App)]
 fn web_app () -> Html {
-    let test: String = "CRANE".to_string();
+    let words = vec![
+        Word {
+            word: "CRANE".to_string(),
+            code: "OX-OO".to_string(),
+        }
+    ];
+
     html! {
         <>
             <h1> { "wordle-rs" } </h1>
-            <ul>
-                <li><Word word={test} active=false /></li>
-            </ul>
+            <WordList words={words} />
         </>
     }
 }

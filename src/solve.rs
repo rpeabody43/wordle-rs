@@ -30,28 +30,12 @@ impl Session {
         }
     }
 
-    pub fn new_guess (&mut self, code_str: &String) {
+    pub fn new_guess (&mut self, code: u16) {
         let word = self.dict.get_word(self.word_idx);
-        if code_str.eq("OOOOO") { // 5 Greens
+
+        if code == 0 { // 5 Greens
             self.gameover = true;
             return;
-        }
-        // Convert from a human readable string to a base 3 number
-        // The b3 number is reversed
-        // i.e. XX-OX becomes 20122
-        let mut code: u16 = 0;
-        for i in 0..code_str.len() {
-            let c = code_str.chars().nth(i).unwrap();
-            code += match c {
-                'O' => 0,
-                '-' => 1,
-                'X' => 2,
-                _ => {
-                    // Already checked for validity above, so this will never run
-                    // Borrow checker throws a compile error if there's no _ pattern
-                    panic!("this can't happen lol");
-                }
-            } * 10_u32.pow(i as u32) as u16;
         }
 
         // Remove everything that doesn't match that code with the same word

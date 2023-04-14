@@ -13,7 +13,6 @@ h1 {
     margin: 0px;
     margin-bottom: 30px;
     border-bottom: 2px solid #aaaaaa;
-
 }
 
 ul {
@@ -48,3 +47,10 @@ ul {
     user-select: none;
 }
 
+.green {
+    background-color: #538d4e;
+}
+
+.yellow {
+    background-color: #b59f3b;
+}
