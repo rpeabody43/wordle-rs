@@ -2,14 +2,7 @@
 
 use std::fs;
 
-pub fn string_from_char_arr (chars: &[char; 5]) -> String {
-    let mut ret = String::new();
-    for c in chars {
-        ret.push(*c);
-    }
-    ret
-}
-
+#[derive(Clone, PartialEq, Eq,)]
 pub struct Dictionary {
     pub words: Vec<[char; 5]>,
 }
@@ -35,22 +28,17 @@ fn string_to_chars (word: &String) -> [char; 5]{
 }
 
 // Returns a vector, split from file path; panics if file does not exist
-fn file_to_vec (f: &str) -> Vec<[char; 5]> {
-    let file = fs::read_to_string(f);
-    match file {
-        Ok(f) => {
-            return f.split("\r\n").
-                map(|s| string_to_chars(&s.to_uppercase())).
-                collect();
-        }
-        Err(..) => { panic!("FnF"); }
-    }
+fn file_to_vec () -> Vec<[char; 5]> {
+    let file = include_str!("hiddenwords.txt");
+    file.split("\r\n").
+    map(|s| string_to_chars(&s.to_uppercase())).
+    collect()
 }
 
 impl Dictionary {
-    pub fn new (f: &str) -> Self {
+    pub fn new () -> Self {
         Dictionary {
-            words: file_to_vec(f),
+            words: file_to_vec(),
         }
     }
 

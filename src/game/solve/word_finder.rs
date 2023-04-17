@@ -37,6 +37,7 @@ fn standard_dev(matches: &[u16; 243]) -> f32 {
 }
 
 // The instance of each game
+#[derive(Clone, PartialEq, Eq,)]
 pub struct Finder {
     pub remaining_words : Vec<usize>
 }

@@ -10,9 +10,7 @@ pub fn console_app () {
                  false => "SURVIVLE:"
              });
 
-    let dict_path = "resources/hiddenwords.txt";
-
-    let mut session: solve::Session = solve::Session::new(mode, dict_path);
+    let mut session: solve::Session = solve::Session::new(mode);
     let mut code_str: String;
 
     while !session.gameover {

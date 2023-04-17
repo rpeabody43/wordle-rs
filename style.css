@@ -1,5 +1,14 @@
+:root {
+    --green: #538d4e;
+    --yellow: #b59f3b;
+    --gray: #3a3a3c;
+    --background: #121213;
+    --darkgray: #202020;
+}
+
+
 body {
-    background-color: #121213;
+    background-color: var(--background);
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin: 0px;
 }
@@ -12,14 +21,83 @@ h1 {
     padding-bottom: 15px;
     margin: 0px;
     margin-bottom: 30px;
-    border-bottom: 2px solid #aaaaaa;
+    border-bottom: 2px solid #3a3a3c;
+}
+
+.switch-container {
+    width: 100%;
+    text-align: center;
+}
+
+.switch {
+    display: inline-block;
+    position: relative;
+    top: -9px;
+}
+
+.switch input[type="checkbox"] {
+    opacity: 0;
+    height: 0px;
+    width: 0px;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    margin: 0px;
+}
+
+.switch-inner {
+    color: #fff;
+    margin: 0px;
+    width: 160px;
+    height: 40px;
+    background: var(--darkgray);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    display: block
+}
+
+.switch-inner:before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    line-height: 26px;
+}
+
+.switch-inner:after {
+    content: attr(data-off);
+    width: 80px;
+    height: 26px;
+    line-height: 26px;
+    background: var(--green);
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    padding: 5px 0px;
+}
+
+.switch input[type="checkbox"]:checked + .switch-inner:after {
+    content: attr(data-on);
+    left: 78px;
+    background: #3c3c3c;
+}
+
+.switch input[type="checkbox"]:checked + .switch-inner:before {
+    content: "";
+    right: auto;
+    left: 20px;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
     display: flex;
-    justify-content: center;
+    row-gap: 8px;
+    align-items: center;
+    flex-direction: column;
 }
 
 .word {
@@ -27,7 +105,7 @@ ul {
     grid-auto-flow: column;
     grid-template-rows: 70px;
     grid-template-columns: repeat(5, 70px);
-    column-gap: 5px;
+    column-gap: 8px;
 }
 
 .letter {
@@ -39,18 +117,36 @@ ul {
     align-items: center;
     text-transform: uppercase;
 
-    background-color: #3a3a3c;
+    background-color: var(--gray);
     color: #ffffff;
 
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+
+    transition: background-color 0.3s ease;
 }
 
 .green {
-    background-color: #538d4e;
+    background-color: var(--green);
 }
 
 .yellow {
-    background-color: #b59f3b;
+    background-color: var(--yellow);
+}
+
+.next-word {
+    background-color: var(--darkgray);
+    border: 0px;
+    color: #fff;
+    text-align: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px 120px;
+    font-size: 16px;
+    margin: auto;
+}
+
+.container {
+    text-align: center;
 }
