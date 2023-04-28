@@ -43,5 +43,5 @@ The basic loop goes like this:
 As with the web app, the program may exit early if conflicting information is given or the answer isn't in the list.
 
 ## Project Outline
-- The source code is located in ./src, with `main.rs` as the entrypoint
-- The main solver instance logic is located in `/game/solve.rs`
+- The source code is located in `./src`, with `main.rs` as the entrypoint and `console.rs` and `webapp.rs` for their respective frontend methods.
+- The main solver instance logic is located in `/game/solve.rs`.
