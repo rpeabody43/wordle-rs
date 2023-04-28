@@ -44,4 +44,4 @@ As with the web app, the program may exit early if conflicting information is gi
 
 ## Project Outline
 - The source code is located in ./src, with `main.rs` as the entrypoint
-- The main solver logic is located in ./src/game, while the two respective frontends are located in `console.rs` and `webapp.rs`
+- The main solver instance logic is located in `/game/solve.rs`
