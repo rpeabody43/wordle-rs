@@ -1,27 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Bevan&family=Libre+Franklin:wght@400;700&display=swap');
+
 :root {
     --green: #538d4e;
     --yellow: #b59f3b;
     --gray: #3a3a3c;
     --background: #121213;
     --darkgray: #202020;
+    --darkred: #9e2020;
 }
-
 
 body {
     background-color: var(--background);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: 'Libre Franklin', Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
     margin: 0px;
 }
 
-h1 {
-    font-size: 50px;
+.header {
+    margin: 0px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #3a3a3c;
+    height: 65px;
+}
+
+.header h1 {
+    font-family: 'Bevan';
+    font-size: 36px;
     font-weight: bold;
     color: #ffffff;
     text-align: center;
     padding-bottom: 15px;
     margin: 0px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #3a3a3c;
 }
 
 .switch-container {
@@ -95,7 +104,7 @@ ul {
     list-style-type: none;
     padding: 0;
     display: flex;
-    row-gap: 8px;
+    row-gap: 5px;
     align-items: center;
     flex-direction: column;
 }
@@ -105,14 +114,14 @@ ul {
     grid-auto-flow: column;
     grid-template-rows: 70px;
     grid-template-columns: repeat(5, 70px);
-    column-gap: 8px;
+    column-gap: 5px;
 }
 
 .letter {
     display: inline-flex;
     font-weight: bold;
     text-align: center;
-    font-size: 40px;
+    font-size: 2rem;
     justify-content: center;
     align-items: center;
     text-transform: uppercase;
@@ -123,8 +132,6 @@ ul {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-
-    transition: background-color 0.3s ease;
 }
 
 .green {
@@ -135,16 +142,33 @@ ul {
     background-color: var(--yellow);
 }
 
-.next-word {
-    background-color: var(--darkgray);
+.buttons {
+    width: 300px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.control-btn {
     border: 0px;
     color: #fff;
     text-align: center;
-    align-items: center;
     text-decoration: none;
-    padding: 10px 120px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex: 1;
     font-size: 16px;
     margin: auto;
+    margin-bottom: 15px;
+}
+
+.next-word {
+    background-color: var(--darkgray);
+}
+
+.reset {
+    background-color: var(--darkred);
 }
 
 .container {

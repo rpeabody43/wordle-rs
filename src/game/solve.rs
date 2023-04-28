@@ -49,9 +49,10 @@ impl Session {
 
     pub fn from (mode: bool, prev_session: Self) -> Self {
         let dict = prev_session.dict;
+        let finder = word_finder::Finder::new(dict.words.len() as u32);
         Self {
             mode,
-            finder: prev_session.finder,
+            finder,
             word_idx: default_words(mode),
             dict,
             gameover: false,
@@ -69,6 +70,11 @@ impl Session {
 
         // Remove everything that doesn't match that code with the same word
         self.finder.rmv_words(word, code, &self.dict);
+
+        if self.finder.remaining_words.len() == 0 {
+            self.gameover = true;
+            return;
+        }
 
         self.rounds += 1;
 
