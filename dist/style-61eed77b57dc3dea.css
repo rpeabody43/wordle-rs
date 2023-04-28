@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Bevan&family=Libre+Franklin:wght@400;700&display=swap');
+
+:root {
+    --green: #538d4e;
+    --yellow: #b59f3b;
+    --gray: #3a3a3c;
+    --background: #121213;
+    --darkgray: #202020;
+    --darkred: #9e2020;
+}
+
+body {
+    background-color: var(--background);
+    font-family: 'Libre Franklin', Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.header {
+    margin: 0px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #3a3a3c;
+    height: 65px;
+}
+
+.header h1 {
+    font-family: 'Bevan';
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    padding-bottom: 15px;
+    margin: 0px;
+}
+
+.switch-container {
+    width: 100%;
+    text-align: center;
+}
+
+.switch {
+    display: inline-block;
+    position: relative;
+    top: -9px;
+}
+
+.switch input[type="checkbox"] {
+    opacity: 0;
+    height: 0px;
+    width: 0px;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    margin: 0px;
+}
+
+.switch-inner {
+    color: #fff;
+    margin: 0px;
+    width: 160px;
+    height: 40px;
+    background: var(--darkgray);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    display: block
+}
+
+.switch-inner:before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    line-height: 26px;
+}
+
+.switch-inner:after {
+    content: attr(data-off);
+    width: 80px;
+    height: 26px;
+    line-height: 26px;
+    background: var(--green);
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    padding: 5px 0px;
+}
+
+.switch input[type="checkbox"]:checked + .switch-inner:after {
+    content: attr(data-on);
+    left: 78px;
+    background: #3c3c3c;
+}
+
+.switch input[type="checkbox"]:checked + .switch-inner:before {
+    content: "";
+    right: auto;
+    left: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    row-gap: 5px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.word {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 70px;
+    grid-template-columns: repeat(5, 70px);
+    column-gap: 5px;
+}
+
+.letter {
+    display: inline-flex;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2rem;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+
+    background-color: var(--gray);
+    color: #ffffff;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.green {
+    background-color: var(--green);
+}
+
+.yellow {
+    background-color: var(--yellow);
+}
+
+.buttons {
+    width: 300px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.control-btn {
+    border: 0px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex: 1;
+    font-size: 16px;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.next-word {
+    background-color: var(--darkgray);
+}
+
+.reset {
+    background-color: var(--darkred);
+}
+
+.container {
+    text-align: center;
+}
