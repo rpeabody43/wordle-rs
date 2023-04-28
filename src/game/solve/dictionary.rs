@@ -1,7 +1,4 @@
 // Standard functions for the dictionary of words
-
-use std::fs;
-
 #[derive(Clone, PartialEq, Eq,)]
 pub struct Dictionary {
     pub words: Vec<[char; 5]>,
