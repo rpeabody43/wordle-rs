@@ -71,7 +71,7 @@ impl Session {
         // Remove everything that doesn't match that code with the same word
         self.finder.rmv_words(word, code, &self.dict);
 
-        if self.finder.remaining_words.len() == 0 {
+        if self.finder.remaining_words.is_empty() {
             self.gameover = true;
             return;
         }

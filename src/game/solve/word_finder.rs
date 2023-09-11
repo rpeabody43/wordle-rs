@@ -54,7 +54,7 @@ impl Finder {
         self.remaining_words.retain
         (|w|
             wordle::gen_code(
-                &prev_guess,
+                prev_guess,
                 dict.get_word(*w)) == code);
     }
 
@@ -80,11 +80,9 @@ impl Finder {
                     ret_dev = std_dev;
                 }
             }
-            else {
-                if std_dev > ret_dev {
-                    ret_word = *possible_guess;
-                    ret_dev = std_dev;
-                }
+            else if std_dev > ret_dev {
+                ret_word = *possible_guess;
+                ret_dev = std_dev;
             }
         }
         ret_word

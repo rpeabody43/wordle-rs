@@ -28,8 +28,7 @@ pub fn console_app () {
 fn set_mode () -> bool {
     println!("1 for Wordle, 2 for Survivle: ");
     let mut mode_str = String::new();
-    let valid = false;
-    while !valid {
+    loop { // Loops forever
         match stdin().read_line(&mut mode_str) {
             Ok(_) => { }
             Err(_) => {

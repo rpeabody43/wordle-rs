@@ -6,7 +6,7 @@ pub struct Dictionary {
 
 // The < operator works with strings but for a char array I have to do this
 fn is_lower_alphabet (word1: &[char; 5], word2: &[char; 5]) -> bool {
-    for i in 0..5 as usize {
+    for i in 0..5 {
         match word1[i] == word2[i] {
             true => { continue; }
             false => { return word1[i] < word2[i]; }
@@ -19,8 +19,7 @@ fn is_lower_alphabet (word1: &[char; 5], word2: &[char; 5]) -> bool {
 fn string_to_chars (word: &String) -> [char; 5]{
     let mut ret: [char; 5] = [' '; 5];
     let chars: Vec<char> = word.chars().collect();
-    for i in 0..chars.len() as usize { ret[i] = chars[i];
-    }
+    ret[..chars.len()].copy_from_slice(&chars[..]);
     ret
 }
 

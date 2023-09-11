@@ -20,10 +20,10 @@ impl Default for State {
     }
 }
 
-fn vec_to_code (code_vec: &Vec<u8>) -> u16 {
+fn vec_to_code (code_vec: &[u8]) -> u16 {
     let mut ret = 0;
-    for i in 0..code_vec.len() {
-        ret += code_vec[i] as u16 * 10_u32.pow(i as u32) as u16;
+    for (i, &val) in code_vec.iter().enumerate() {
+        ret += val as u16 * 10_u16.pow(i as u32);
     }
     ret
 }
@@ -31,7 +31,7 @@ fn vec_to_code (code_vec: &Vec<u8>) -> u16 {
 fn current_word (session: &solve::Session) -> Word {
     Word {
         letters: session.current_word(),
-        code: vec![2; 5],
+        code: [2; 5],
     }
 }
 
@@ -79,7 +79,7 @@ fn mode_toggle () -> Html{
 #[derive(Clone, PartialEq, Eq)]
 struct Word {
     letters: String,
-    code: Vec<u8>,
+    code: [u8; 5], 
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -105,7 +105,7 @@ fn word_comp (WordCompProps { wordidx }: &WordCompProps) -> Html {
             // Only modify the last word's code
             if idx == state.word_list.len() - 1 && !state.session.gameover {
                 let code = &mut state.word_list[idx].code;
-                if code[letteridx] <= 0 {
+                if code[letteridx] == 0 {
                     code[letteridx] = 2;
                 } else {
                     code[letteridx] -= 1;
