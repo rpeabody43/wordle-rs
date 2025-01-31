@@ -1,5 +1,5 @@
 # wordle-rs
-A program to solve any [Wordle](https://www.nytimes.com/games/wordle/index.html) or [Survivle](https://lazyguyy.github.io/survivle/) puzzle, written in Rust. Now with a web version [here!](https://rpeabody43.github.io/wordle-rs/)
+A program to solve any [Wordle](https://www.nytimes.com/games/wordle/index.html) or [Survivle](https://lazyguyy.github.io/survivle/) puzzle, written in Rust. Now with a web version [here!](https://rpeabs.net/wordle-rs/)
 
 ## Web App
 ### Usage
