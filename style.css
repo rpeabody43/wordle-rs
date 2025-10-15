@@ -63,7 +63,8 @@ body {
     overflow: hidden;
     position: relative;
     transition: all 0.3s ease;
-    display: block
+    display: block;
+    cursor: pointer;
 }
 
 .switch-inner:before {
@@ -98,6 +99,76 @@ body {
     content: "";
     right: auto;
     left: 20px;
+}
+
+.hard-mode-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hard-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+}
+
+.hard-mode-toggle input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 25px; 
+    height: 25px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.hard-mode-checkmark {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-color: var(--darkgray);
+    border: 2px solid var(--darkgray);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hard-mode-toggle input:checked + .hard-mode-checkmark,
+.hard-mode-container input:checked ~ .hard-mode-checkmark {
+    background-color: var(--green);
+}
+
+.hard-mode-checkmark::after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg) translateY(-1px);
+    transform-origin: center;
+    opacity: 0;
+}
+
+.hard-mode-toggle input:checked + .hard-mode-checkmark::after {
+    opacity: 1;
+}
+
+.hard-mode-container > span {
+    color: #fff;
+    user-select: none;
+    margin: 0;
+    align-self: center;
+    line-height: 1;
+}
+
+.hard-mode-spacer {
+    padding-bottom: 25px;
 }
 
 ul {
@@ -154,13 +225,13 @@ ul {
     border: 0px;
     color: #fff;
     text-align: center;
-    text-decoration: none;
     padding-top: 10px;
     padding-bottom: 10px;
     flex: 1;
     font-size: 16px;
     margin: auto;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 .next-word {
